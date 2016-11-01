@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+		  *{
+				padding:0;margin:0;
+			}
+     img{
+		   width:200px; 
+			 position:absolute; 
+		 }
+		</style>
+		<script src="ajax.js"></script>
+		<script>
+		  window.onload=changePosition;
+			window.onresize=changePosition;
+			var arr;
+			var k=0;
+			window.onscroll=function(){
+				var _top= document.body.scrollTop|| document.documentElement.scrollTop;
+				var imgs=document.getElementsByTagName("img");
+				var lastImg= imgs[imgs.length-1];
+				var lastTop= lastImg.offsetTop-100;
+				
+				var viewHeight= document.documentElement.clientHeight;
+				// console.log(lastTop+" "+viewHeight+" "+_top)
+				if(arr[k]){
+						if(lastTop<viewHeight+ _top){
+							var img=document.createElement("img");
+							img.src= "ajax1/"+arr[k];
+							document.body.appendChild(img);
+							k++;
+							if(k==arr.length){
+								k=0;
+							}
+							changePosition();
+					  }
+				}
+				
+			}
+			
+			function changePosition(){
+				//功能:给页面上所有的图片进行自动定位
+				ajax("img.json",function(str){
+					arr= JSON.parse(str).src.split(",");
+				})
+				
+				
+			  var imgs=document.getElementsByTagName("img");
+				//判断当前的页面宽度可以容纳多少列
+				var viewWidth= document.documentElement.clientWidth;
+				var imgWidth= imgs[0].offsetWidth;
+				
+				var cols= Math.floor(viewWidth/imgWidth);
+				//console.log(cols+" "+viewWidth +" "+imgWidth+" "+viewWidth/imgWidth)
+
+				var j=0; //所属的行数  , 所属的列= i%cols
+			  for(var i=0;i<imgs.length;i++){
+				  /* console.log(imgs[i].offsetWidth+" "+
+					imgs[i].offsetHeight+" "+imgs[i].offsetTop); */
+					if(i%cols==0 && i!=0){
+						j++;
+					}
+					imgs[i].style.left= i%cols* imgWidth+"px";
+					if(i<cols){
+						imgs[i].style.top=0;
+					}else{
+						imgs[i].style.top= imgs[i-cols].offsetTop+ imgs[i-cols].offsetHeight+"px";
+					}
+					
+				}
+			}
+		</script>
+	</head>
+	<body >
+	   <img src="ajax1/0.jpg"/>
+		 <img src="ajax1/1.jpg"/>
+		 <img src="ajax1/2.jpg"/>
+		 <img src="ajax1/3.jpg"/>
+		 <img src="ajax1/4.jpg"/>
+		 <img src="ajax1/5.jpg"/>
+		 <img src="ajax1/6.jpg"/>
+		 <img src="ajax1/7.jpg"/>
+		 <img src="ajax1/8.jpg"/>
+		 
+	</body>
+	<script>
+       /* var imgs=document.getElementsByTagName("img");
+			 setTimeout(function(){
+				 for(var i=0;i<imgs.length;i++){
+				  console.log(i+" "+imgs[i].offsetWidth+" "+imgs[i].offsetHeight+" "+imgs[i].offsetTop);
+				 }
+			 },10); */
+			  
+	</script>
+</html>

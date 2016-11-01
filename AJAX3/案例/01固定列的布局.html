@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+		  *{
+				padding:0;margin:0;
+			}
+     img{
+		   width:250px;
+		 }
+		 ul{
+		   float:left;
+			 list-style:none;
+		 }
+		 #div1{
+		   position:absolute;
+			 // margin:0 auto;
+			 left:200px;
+		 }
+		</style>
+		<script src="ajax.js"></script>
+		<script >
+		  window.onload=function(){
+				var oUl= document.getElementsByTagName("ul");
+				var arr;
+				//发送ajax请求，请求图片的路径 json格式的文件
+				ajax("img.json",function(str){
+					arr= JSON.parse(str).src.split(",");
+					//console.log(arr);
+				})
+				var k=0;
+				var viewHeight= document.documentElement.clientHeight;
+				window.onscroll=function(){
+					var _top= document.body.scrollTop|| document.documentElement.scrollTop;
+					//console.log(_top);
+					//循环所有的列，找到每一列的最后一张，求出最后一张的offsetTop
+					for(var i=0;i<oUl.length;i++){
+						var lis=oUl[i].getElementsByTagName("li");
+						var lastLi= lis[lis.length-1];
+						var lastTop= lastLi.offsetTop;
+						// console.log(i+" "+lastTop);
+						if(arr[k]){
+							if(lastTop<viewHeight+_top){
+								//当最后一张的上边缘进入可视区域，则在其后添加一张图片
+								var li= document.createElement("li");
+								oUl[i].appendChild(li);
+								var _img=document.createElement("img");
+								_img.src="ajax1/"+arr[k];
+								console.log(arr[k])
+								li.appendChild(_img);
+								k++;
+								if(k==arr.length){
+									k=0;
+								}
+						  }
+						}
+						
+					}
+				}
+				
+			}
+			
+		</script>
+	</head>
+	<body >
+	   <div id="div1">
+			 <ul>
+				 <li><img src="ajax1/0.jpg"></li>
+				 <li><img src="ajax1/1.jpg"></li>
+				 <li><img src="ajax1/2.jpg"></li>
+			 </ul>
+			 <ul>
+				 <li><img src="ajax1/10.jpg"></li>
+				 <li><img src="ajax1/11.jpg"></li>
+				 <li><img src="ajax1/12.jpg"></li>
+			 </ul>
+			 <ul>
+				 <li><img src="ajax1/20.jpg"></li>
+				 <li><img src="ajax1/21.jpg"></li>
+				 <li><img src="ajax1/22.jpg"></li>
+			 </ul>
+		 </div>
+	</body>
+	<script>
+    
+	</script>
+</html>
